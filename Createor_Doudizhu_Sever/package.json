@@ -1,0 +1,26 @@
+{
+  "name": "createor_doudizhu_sever",
+  "version": "0.0.1",
+  "description": "网络斗地主",
+  "main": "main.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GetHash386107402/Creator_Doudizhu.git"
+  },
+  "keywords": [
+    "zzf386107402"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GetHash386107402/Creator_Doudizhu/issues"
+  },
+  "homepage": "https://github.com/GetHash386107402/Creator_Doudizhu#readme",
+  "dependencies": {
+    "mysql": "^2.16.0",
+    "socket.io": "^2.2.0"
+  }
+}
