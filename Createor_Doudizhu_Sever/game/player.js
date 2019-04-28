@@ -13,6 +13,7 @@ module.exports = function (spec,socket,cbIndex,gameController) {
     let _avatarUrl = spec.avatar_url;
     let _goldCount = spec.gold_count;
     let _seatIndex = 0;
+    that.isReady = false;
     let _room = undefined;
     const notify = function(type,data,callBackIndex){
       _socket.emit('notify',{
@@ -24,6 +25,10 @@ module.exports = function (spec,socket,cbIndex,gameController) {
     notify('login',{
         goldCount:_goldCount
     },cbIndex);
+    _socket.on("disconnect",()=>{
+        console.log("玩家掉线");
+        _room.playerOffline(that);
+    });
     _socket.on('notify',(notifyData)=>{
         let type = notifyData.type;
         let callBackIndex = notifyData.callBackIndex;
@@ -60,11 +65,39 @@ module.exports = function (spec,socket,cbIndex,gameController) {
                     });
                 }
                 break;
+            case 'ready':
+                that.isReady = true;
+                if (_room){
+                    _room.playerReady(that);
+                }
+                break;
+            case 'start_game':
+                if (_room){
+                    _room.roomMangerSartGame(that,(err,data)=>{
+                        if (err){
+                            notify("start_game",{err:err},callBackIndex);
+                        }else {
+                            notify("start_game",{data:data},callBackIndex);
+                        }
+                    });
+                }
+                break;
             default:
                 break;
         }
     });
-
+    that.sendPlayerJoinRoom = function(data){
+        notify("player_join_room",data,null);
+    };
+    that.sendPlayerReady = function(data){
+        notify("player_ready",data,null);
+    };
+    that.sendGameStart = function(){
+        notify("game_start",{},null);
+    };
+    that.sendChangeRoomManger = function(data){
+        notify("change_room_manger",data,null);
+    };
     Object.defineProperty(that,'nickName',{
        get(){
            return _nickName
@@ -88,6 +121,9 @@ module.exports = function (spec,socket,cbIndex,gameController) {
     Object.defineProperty(that,'seatIndex',{
         get(){
             return _seatIndex
+        },
+        set(seatIndex){
+            _seatIndex = seatIndex;
         }
     });
 

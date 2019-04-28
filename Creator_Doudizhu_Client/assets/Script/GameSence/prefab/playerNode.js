@@ -19,13 +19,24 @@ cc.Class({
         goldLabel:{
             default:null,
             type:cc.Label
+        },
+        readyIcon:{
+            default:null,
+            type:cc.Node
+        },
+        offLineIcon:{
+            default:null,
+            type:cc.Node
         }
     },
 
-    start () {
+    onLoad () {
+        this.readyIcon.active = false;
+        this.offLineIcon.active = false;
 
     },
     initWithData(data){
+        this.accountID = data.accountID;
         this.idLabel.string = data.accountID;
         this.nickNameLabel.string = data.nickName;
         this.goldLabel.string = data.goldCount;
@@ -34,6 +45,13 @@ cc.Class({
             this.headImage.spriteFrame = new cc.SpriteFrame(tex);
             let newWidth = this.headImage.node.width;
             this.headImage.node.scale = oldWidth/newWidth;
+        });
+        this.node.on("player_ready",(event)=>{
+            let detail = event.detail;
+            if (detail === this.accountID){
+                this.readyIcon.node.active = true;
+
+            }
         });
     }
 

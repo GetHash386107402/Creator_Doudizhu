@@ -23,6 +23,7 @@ cc.Class({
                         console.log('join room data = ' + JSON.stringify(data));
                         Global.playerData.bottom = data.data.bottom;
                         Global.playerData.rate = data.data.rate;
+
                         cc.director.loadScene('GameSence');
                     }
                 });
