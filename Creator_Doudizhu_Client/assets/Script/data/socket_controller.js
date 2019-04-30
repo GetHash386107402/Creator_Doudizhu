@@ -71,7 +71,10 @@ const SocketController = function () {
     };
     that.onChangeRoomManger = function (cb) {
         _event.on("change_room_manger",cb);
-    }
+    };
+    that.onPushCard = function (cb) {
+        _event.on("push_card",cb);
+    };
     return that;
 };
 export default  SocketController;

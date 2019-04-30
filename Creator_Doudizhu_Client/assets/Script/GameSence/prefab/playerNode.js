@@ -33,6 +33,9 @@ cc.Class({
     onLoad () {
         this.readyIcon.active = false;
         this.offLineIcon.active = false;
+        this.node.on("game_starting",()=>{
+            this.readyIcon.active = false;
+        })
 
     },
     initWithData(data){

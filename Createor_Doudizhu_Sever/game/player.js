@@ -13,6 +13,7 @@ module.exports = function (spec,socket,cbIndex,gameController) {
     let _avatarUrl = spec.avatar_url;
     let _goldCount = spec.gold_count;
     let _seatIndex = 0;
+    that.cards = [];
     that.isReady = false;
     let _room = undefined;
     const notify = function(type,data,callBackIndex){
@@ -26,8 +27,10 @@ module.exports = function (spec,socket,cbIndex,gameController) {
         goldCount:_goldCount
     },cbIndex);
     _socket.on("disconnect",()=>{
-        console.log("玩家掉线");
-        _room.playerOffline(that);
+        if (_room) {
+            console.log("玩家掉线");
+            _room.playerOffline(that);
+        }
     });
     _socket.on('notify',(notifyData)=>{
         let type = notifyData.type;
@@ -97,6 +100,10 @@ module.exports = function (spec,socket,cbIndex,gameController) {
     };
     that.sendChangeRoomManger = function(data){
         notify("change_room_manger",data,null);
+    };
+    that.sendPushCard = function(cards){
+        that.cards = cards;
+        notify("push_card",cards,null);
     };
     Object.defineProperty(that,'nickName',{
        get(){

@@ -56,6 +56,11 @@ cc.Class({
                 this.playerNodeList[i].emit("player_ready",data);
             }
         });
+        Global.socket.onGameStart(()=>{
+            for (let i=0;i<this.playerNodeList.length;i++){
+                this.playerNodeList[i].emit("game_starting");
+            }
+        });
     },
     initPlayerPos(seatIndex){
         let children = this.playerPosNode.children;

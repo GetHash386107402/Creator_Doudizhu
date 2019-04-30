@@ -1,4 +1,13 @@
 const defines = require('./../defines');
+const croupier = require('./croupier');
+//给房间添加状态机
+const RoomState = {
+    Invalide: -1,
+    WaittingReaty: 1,
+    StartGame: 2,
+    PushCard: 3
+
+};
 const getRandomStr = function(count){
   let str = '';
   for (let i = 0; i< count;i++){
@@ -28,8 +37,42 @@ module.exports = function (spec,player) {
     let _rate = config.rate;
     let _roomManager = player;
     let _playerList = [];
+    let _croupier = croupier();
 
-
+    // let cards = _croupier.getThreeCard();
+    // for (let i=0;i<cards.length;i++){
+    //     for (let j=0;j<cards[i].length;j++){
+    //         let card = cards[i][j];
+    //     }
+    // }
+    let _state = RoomState.Invalide;
+    //状态机切换
+    const setState = function(state){
+        if (state === _state){
+            return;
+        }
+        switch (state) {
+            case RoomState.WaittingReaty:
+                break;
+            case RoomState.StartGame:
+                for (let i=0;i<_playerList.length;i++){
+                    _playerList[i].sendGameStart();
+                }
+                setState(RoomState.PushCard);
+                break;
+            case RoomState.PushCard:
+                let threeCards = _croupier.getThreeCard();
+                for (let i = 0;i<_playerList.length;i++){
+                    _playerList[i].sendPushCard(threeCards[i]);
+                }
+                break;
+            default:
+                break;
+        }
+        _state = state;
+    }
+    setState(RoomState.WaittingReaty);
+    //玩家加入
     that.joinPlayer = function (player) {
         player.seatIndex = getSeatIndex(_playerList);
         console.log("dfdfdfdfdfdfdfdfdfd"+JSON.parse(getSeatIndex(_playerList)));
@@ -77,11 +120,11 @@ module.exports = function (spec,player) {
             _playerList[i].sendChangeRoomManger(_roomManager.accountID);
         }
     };
-    const gameStart = function(){
-      for (let i=0;i<_playerList.length;i++){
-          _playerList[i].sendGameStart();
-      }
-    };
+    // const gameStart = function(){
+    //   for (let i=0;i<_playerList.length;i++){
+    //       _playerList[i].sendGameStart();
+    //   }
+    // };
     that.playerOffline = function(player){
         for (let i=0;i<_playerList.length;i++){
             if (_playerList[i].accountID === palyer.accountID){
@@ -117,7 +160,8 @@ module.exports = function (spec,player) {
         if (cb){
             cb(null,"success");
         }
-        gameStart();
+        // gameStart();
+        setState(RoomState.StartGame);
     };
 
     Object.defineProperty(that,'bottom',{
