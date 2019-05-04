@@ -107,7 +107,7 @@ module.exports = function (spec,player) {
                 seatIndex:player.seatIndex,
                 playerData: playerData,
                 roomID:that.roomID,
-                houseManganerID:_roomManager.accountID
+                roomMangerID:_roomManager.accountID
             });
         }
     };
@@ -127,7 +127,7 @@ module.exports = function (spec,player) {
     // };
     that.playerOffline = function(player){
         for (let i=0;i<_playerList.length;i++){
-            if (_playerList[i].accountID === palyer.accountID){
+            if (_playerList[i].accountID === player.accountID){
                 _playerList.splice(i,1);
                 if (player.accountID === _roomManager.accountID){
                     changeRoomManger();

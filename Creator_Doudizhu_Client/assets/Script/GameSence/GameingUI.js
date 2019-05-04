@@ -9,14 +9,31 @@ cc.Class({
 
     onLoad () {
         Global.socket.onPushCard((data)=>{
-            this.pushCard();
+            this.pushCard(data);
         });
     },
-    pushCard(){
-        for (let i=0;i<17;i++){
+    pushCard(data){
+        data.sort(function (a,b) {
+           if (a.hasOwnProperty('value')&&b.hasOwnProperty('value')){
+               return b.value - a.value;
+           }
+           if (a.hasOwnProperty('king')&& !b.hasOwnProperty('king')){
+               return -1;
+           }
+           if (!a.hasOwnProperty('king')&& b.hasOwnProperty('king')) {
+                return 1;
+           }
+           if (a.hasOwnProperty('king')&& b.hasOwnProperty('king')){
+               return b.king - a.king;
+           }
+        });
+        for (let i=0;i<data.length;i++){
             let card = cc.instantiate(this.cardPrefab);
             card.parent = this.gameingUI;
-            card.position = cc.p(card.width * (17-1) * -0.5 + card.width * i,0);
+            card.scale = 0.8;
+            card.x = card.width * 0.4 * (17-1) * - 0.5 + card.width * 0.4 * i;
+            card.y = -250;
+            card.getComponent('card').showCard(data[i]);
         }
     }
 });

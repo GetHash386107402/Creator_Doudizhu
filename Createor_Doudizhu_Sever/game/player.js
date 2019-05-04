@@ -98,7 +98,7 @@ module.exports = function (spec,socket,cbIndex,gameController) {
     that.sendGameStart = function(){
         notify("game_start",{},null);
     };
-    that.sendChangeRoomManger = function(data){
+     that.sendChangeRoomManger = function(data){
         notify("change_room_manger",data,null);
     };
     that.sendPushCard = function(cards){

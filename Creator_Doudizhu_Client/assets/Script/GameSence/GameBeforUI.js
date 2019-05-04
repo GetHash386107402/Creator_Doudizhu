@@ -26,7 +26,6 @@ cc.Class({
                 this.readyButton.active = false;
                 this.gameStartButton.active = true;
             }
-
         });
     },
     onButtonClick(event,customData){

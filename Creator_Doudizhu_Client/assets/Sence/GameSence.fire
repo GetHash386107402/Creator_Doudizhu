@@ -778,7 +778,7 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 19
@@ -902,7 +902,9 @@
     "_N$hoverSprite": null,
     "hoverSprite": null,
     "_N$disabledSprite": null,
-    "_N$target": null
+    "_N$target": {
+      "__id__": 18
+    }
   },
   {
     "__type__": "cc.ClickEvent",
@@ -926,7 +928,7 @@
       }
     ],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 25
@@ -1258,6 +1260,8 @@
     "gameingUI": {
       "__id__": 28
     },
-    "cardPrefab": null
+    "cardPrefab": {
+      "__uuid__": "8739c983-91de-421c-b6c5-aa89121f4d1c"
+    }
   }
 ]

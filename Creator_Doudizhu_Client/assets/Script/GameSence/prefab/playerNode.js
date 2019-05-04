@@ -1,4 +1,4 @@
-import Global from "../../Global";
+ import Global from "../../Global";
 
 cc.Class({
     extends: cc.Component,
@@ -52,7 +52,7 @@ cc.Class({
         this.node.on("player_ready",(event)=>{
             let detail = event.detail;
             if (detail === this.accountID){
-                this.readyIcon.node.active = true;
+                this.readyIcon.active = true;
 
             }
         });
