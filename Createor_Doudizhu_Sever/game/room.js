@@ -5,7 +5,9 @@ const RoomState = {
     Invalide: -1,
     WaittingReaty: 1,
     StartGame: 2,
-    PushCard: 3
+    PushCard: 3,
+    RobMaster:4,
+    ShouBottomCard:5
 
 };
 const getRandomStr = function(count){
@@ -38,6 +40,10 @@ module.exports = function (spec,player) {
     let _roomManager = player;
     let _playerList = [];
     let _croupier = croupier();
+    let _lostPlayer = undefined;
+    let _robMasterPlayerList = [];
+    let _master = undefined;
+    let _threeCardsList =[];
 
     // let cards = _croupier.getThreeCard();
     // for (let i=0;i<cards.length;i++){
@@ -61,9 +67,24 @@ module.exports = function (spec,player) {
                 setState(RoomState.PushCard);
                 break;
             case RoomState.PushCard:
-                let threeCards = _croupier.getThreeCard();
+                _threeCardsList = _croupier.getThreeCard();
                 for (let i = 0;i<_playerList.length;i++){
-                    _playerList[i].sendPushCard(threeCards[i]);
+                    _playerList[i].sendPushCard(_threeCardsList[i]);
+                }
+                setState(RoomState.RobMaster);
+                break;
+            case RoomState.RobMaster:
+                _robMasterPlayerList = [];
+                if (_lostPlayer === undefined){
+                    for (let i=_playerList.length-1;i>=0;i--){
+                        _robMasterPlayerList.push(_playerList[i]);
+                    }
+                }
+                turnPlayerRobMaster();
+                break;
+            case RoomState.ShouBottomCard:
+                for (let i = 0;i<_playerList.length;i++){
+                    _playerList[i].sendShowBottomCard(_threeCardsList[3]);
                 }
                 break;
             default:
@@ -111,6 +132,17 @@ module.exports = function (spec,player) {
             });
         }
     };
+    that.playerRobStateMaster = function (player,value) {
+        if (value === 'robOk'){
+            _master = player;
+        } else if (value === 'robNoOk'){
+
+        }
+        for (let i=0;i<_playerList.length;i++){
+            _playerList[i].sendPlayerRobStateMaster(player.accountID,value);
+        }
+        turnPlayerRobMaster();
+    };
     const changeRoomManger = function(){
         if (_playerList.length === 0){
             return;
@@ -119,6 +151,27 @@ module.exports = function (spec,player) {
         for (let i = 0;i < _playerList.length;i++){
             _playerList[i].sendChangeRoomManger(_roomManager.accountID);
         }
+    };
+    const turnPlayerRobMaster = function () {
+        if (_robMasterPlayerList.length === 0){
+            changeMaster();
+            return;
+        }
+        let player = _robMasterPlayerList.pop();
+        if (_robMasterPlayerList.length === 0 && _master === undefined){
+                _master = player;
+                changeMaster();
+                return;
+        }
+        for (let i =0 ; i<_playerList.length;i++) {
+            _playerList[i].sendPlayerCanRobMaster(player.accountID);
+        }
+    };
+    const changeMaster = function(){
+        for (let i =0 ; i<_playerList.length;i++) {
+            _playerList[i].sendChangeMaster(_master);
+        }
+        setState(RoomState.ShouBottomCard);
     };
     // const gameStart = function(){
     //   for (let i=0;i<_playerList.length;i++){

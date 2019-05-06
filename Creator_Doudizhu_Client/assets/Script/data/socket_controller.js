@@ -58,6 +58,9 @@ const SocketController = function () {
     that.notifyReady = function(){
         notify("ready",{},null);
     };
+    that.notifyRobState = function(value){
+        notify("rob_state",value,null);
+    };
 
 
     that.onPlayerJoinRoom = function (cb) {
@@ -74,6 +77,18 @@ const SocketController = function () {
     };
     that.onPushCard = function (cb) {
         _event.on("push_card",cb);
+    };
+    that.onCanRobMaster = function (cb) {
+        _event.on("can_rob_master",cb);
+    };
+    that.onPlayerRobState =function (cb) {
+        _event.on("player_rob_state",cb);
+    };
+    that.onChangeMaster = function (cb) {
+        _event.on("change_master",cb);
+    };
+    that.onShowBottomCard = function (cb) {
+        _event.on("show_bottom_card",cb);
     };
     return that;
 };

@@ -61,24 +61,44 @@ cc.Class({
                 this.playerNodeList[i].emit("game_starting");
             }
         });
+        Global.socket.onPushCard(()=>{
+            for (let i=0;i<this.playerNodeList.length;i++){
+                this.playerNodeList[i].emit("push_card");
+            }
+        });
+        Global.socket.onCanRobMaster((data)=>{
+            for (let i = 0 ; i<this.playerNodeList.length ; i++){
+                this.playerNodeList[i].emit("can_rob_master",data);
+            }
+        });
+        Global.socket.onPlayerRobState ((data)=>{
+            for (let i = 0 ; i<this.playerNodeList.length ; i++){
+                this.playerNodeList[i].emit("rob_state",data);
+            }
+        });
+        Global.socket.onChangeMaster((data)=>{
+            for (let i = 0 ; i<this.playerNodeList.length ; i++){
+                this.playerNodeList[i].emit("change_master",data);
+            }
+        });
     },
     initPlayerPos(seatIndex){
         let children = this.playerPosNode.children;
         switch (seatIndex) {
             case 0:
-                this.playerPosList[0] = children[0].position;
-                this.playerPosList[1] = children[1].position;
-                this.playerPosList[2] = children[2].position;
+                this.playerPosList[0] = 0;
+                this.playerPosList[1] = 1;
+                this.playerPosList[2] = 2;
                 break;
             case 1:
-                this.playerPosList[1] = children[0].position;
-                this.playerPosList[2] = children[1].position;
-                this.playerPosList[0] = children[2].position;
+                this.playerPosList[1] = 0;
+                this.playerPosList[2] = 1;
+                this.playerPosList[0] = 2;
                 break;
             case 2:
-                this.playerPosList[2] = children[0].position;
-                this.playerPosList[0] = children[1].position;
-                this.playerPosList[1] = children[2].position;
+                this.playerPosList[2] = 0;
+                this.playerPosList[0] = 1;
+                this.playerPosList[1] = 2;
                 break;
             default:
                 break;
@@ -91,8 +111,8 @@ cc.Class({
     addPlayerNode(data){
         let playerNode = cc.instantiate(this.playerNodePrefab);
         playerNode.parent = this.node;
-        playerNode.getComponent('playerNode').initWithData(data);
-        playerNode.position = this.playerPosList[data.seatIndex];
+        playerNode.getComponent('playerNode').initWithData(data,this.playerPosList[data.seatIndex]);
+        playerNode.position = this.playerPosNode.children[this.playerPosList[data.seatIndex]].position;
         this.playerNodeList.push(playerNode);
     }
 

@@ -85,6 +85,11 @@ module.exports = function (spec,socket,cbIndex,gameController) {
                     });
                 }
                 break;
+            case 'rob_state':
+                if (_room){
+                    _room.playerRobStateMaster(that,notifyData.data);
+                }
+                break;
             default:
                 break;
         }
@@ -105,6 +110,19 @@ module.exports = function (spec,socket,cbIndex,gameController) {
         that.cards = cards;
         notify("push_card",cards,null);
     };
+    that.sendPlayerCanRobMaster = function(data){
+        notify("can_rob_master",data,null);
+    };
+    that.sendPlayerRobStateMaster = function(accountID,value){
+        notify("player_rob_state",{accountID:accountID,value:value},null);
+    };
+    that.sendChangeMaster = function(player){
+        notify("change_master",player.accountID);
+    };
+    that.sendShowBottomCard = function(data){
+        notify("show_bottom_card",data);
+    };
+
     Object.defineProperty(that,'nickName',{
        get(){
            return _nickName
